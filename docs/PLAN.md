@@ -315,4 +315,13 @@ README's "How AI was used" section.
 
 | Gate | What Claude proposed | What I decided / changed | Why |
 |------|----------------------|--------------------------|-----|
-|      |                      |                          |     |
+| 0 | (nothing yet; this was my input) | Chose .NET + Vue.js and building from scratch before any planning started | Stack I'm productive in and can defend |
+| 0 | A plan with only a light "review each phase" step | Asked for an explicit human-in-the-loop process, which added gates, a gate packet, the review checklist, and `[C]`/`[H]` ownership | I must understand and defend every line, so review points have to be enforced, not optional |
+| 0 | Plan and requirements at the repo root | Moved the docs into `docs/` and added REQUIREMENT.md with the original statement, word for word | Keeps the requirements traceable as the source of truth for scope |
+| 0 | Progress checkboxes inside PLAN.md | Asked for a separate TASKS.md, which became the only progress tracker | Separate *what/why* (plan) from *done or not done* (tasks), and avoid two lists drifting apart |
+| 0 | README written only in the final phase | Created the README before the first commit, updated every phase | The repo should explain itself at every commit |
+| 0 | Node version documented, frontend versions not | Asked about the Vue version, which led to decision #13: stable Vue 3.5 / Vite 8 / TS 6.0, plus a committed lockfile | Avoid prerelease versions (Vue 3.6 RC) and the TS 7 / `vue-tsc` risk. Reproducible installs. |
+| 0 | Frontend tests only as optional stretch work | Made FE tests part of the plan (decision #14), focused on the API client, validation, and the composable | Testing only the backend would look unbalanced; FE logic deserves the same care |
+| 0 | Only "simple, clean styling" | Asked for a UX proposal, which produced UX.md (decision #15): error prevention, clear outcomes, accessibility basics | The requirement says "good design is still good design" |
+| 0 | Plain CSS, with Tailwind wrongly grouped with component libraries | Chose Tailwind 4 (decision #16) | Faster on a non-scored area, while the markup stays explicit and explainable |
+| 0 | 16 decisions (#1–16), all *Proposed* | Reviewed and accepted all of them | Agreed with the reasoning and tradeoffs as written |
