@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Phase 0 scaffold complete, awaiting Gate 1 review (Gate 0 approved)
+**Current status:** Phase 1 (domain) complete, Gate 2 approved; awaiting your commit. Phase 2 not started.
 
 ---
 
@@ -59,36 +59,36 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - [x] G1.1 `[H]` Project references match the dependency rule
 - [x] G1.2 `[H]` `dotnet build` and `npm run dev` work on my machine
 - [x] G1.3 `[H]` Review checklist done (PLAN.md §3)
-- [ ] G1.4 `[H]` HITL log updated, then commit: `chore: scaffold solution and frontend`
+- [x] G1.4 `[H]` HITL log updated, then commit: `chore: scaffold solution and frontend`
 
 ---
 
 ## Phase 1: Domain, test-first (40 min)
 
-- [ ] T1.1 `[C]` Propose the domain test case list (names plus expected outcomes, no code)
+- [x] T1.1 `[C]` Propose the domain test case list (names plus expected outcomes, no code)
 
 ### Mini-gate 1a: Test spec (5 min)
 - [ ] M1.1 `[H]` Approve, add, or remove test cases
 
-- [ ] T1.2 `[C]` `TransactionType` enum: `Deposit`, `Withdrawal`, `TransferIn`, `TransferOut`
-- [ ] T1.3 `[C]` `Transaction` entity: immutable, created only through `Account`
-- [ ] T1.4 `[C]` `DomainException` base class, plus:
+- [x] T1.2 `[C]` `TransactionType` enum: `Deposit`, `Withdrawal`, `TransferIn`, `TransferOut`
+- [x] T1.3 `[C]` `Transaction` entity: immutable, created only through `Account`
+- [x] T1.4 `[C]` `DomainException` base class, plus:
   - `InvalidAmountException`
   - `InsufficientFundsException`
   - `SameAccountTransferException`
   - `AccountNotFoundException`
-- [ ] T1.5 `[C]` Amount validation: > 0, ≤ 2 decimals, ≤ 1,000,000
-- [ ] T1.6 `[C]` `Account.Deposit`
-- [ ] T1.7 `[C]` `Account.Withdraw` (no overdraft)
-- [ ] T1.8 `[C]` `Account.TransferOut` / `Account.TransferIn` with a shared `TransferId`
-- [ ] T1.9 `[C]` Implement the approved tests, all green
-- [ ] T1.10 `[C]` Present the gate packet
+- [x] T1.5 `[C]` Amount validation: > 0, ≤ 2 decimals, ≤ 1,000,000
+- [x] T1.6 `[C]` `Account.Deposit`
+- [x] T1.7 `[C]` `Account.Withdraw` (no overdraft)
+- [x] T1.8 `[C]` `Account.TransferOut` / `Account.TransferIn` with a shared `TransferId`
+- [x] T1.9 `[C]` Implement the approved tests, all green
+- [x] T1.10 `[C]` Present the gate packet
 
 ### Gate 2: Domain (10 min)
-- [ ] G2.1 `[H]` I can explain why the rules live on `Account` and not in a service
-- [ ] G2.2 `[H]` Break the overdraft check, see a test fail, then revert
-- [ ] G2.3 `[H]` Review checklist done (PLAN.md §3)
-- [ ] G2.4 `[H]` HITL log updated, then commit: `feat(domain): accounts, ledger and invariants`
+- [x] G2.1 `[H]` I can explain why the rules live on `Account` and not in a service
+- [x] G2.2 `[H]` Break the overdraft check, see a test fail, then revert
+- [x] G2.3 `[H]` Review checklist done (PLAN.md §3)
+- [x] G2.4 `[H]` HITL log updated, then commit: `feat(domain): accounts, ledger and invariants`
 
 ---
 

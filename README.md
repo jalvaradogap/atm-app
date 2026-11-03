@@ -3,7 +3,7 @@
 A web-based ATM application for a single user who manages two bank accounts (Checking and
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
-> **Status:** 🚧 Phase 0 (scaffold) done. Solution and frontend build; no domain logic yet.
+> **Status:** 🚧 Phase 1 (domain) implemented, awaiting review. Account rules and ledger are unit tested; no API or UI yet.
 > See [.docs/TASKS.md](.docs/TASKS.md) for live progress.
 
 ## Features
@@ -83,7 +83,7 @@ atm-app/
 │  ├─ Atm.slnx
 │  ├─ Directory.Build.props   # Shared settings: net10.0, nullable, warnings as errors
 │  ├─ src/
-│  │  ├─ Atm.Domain/          # Entities and rules (references nothing)
+│  │  ├─ Atm.Domain/          # Account, Transaction, amount rule, domain exceptions (references nothing)
 │  │  ├─ Atm.Application/     # Use cases and DTOs (→ Domain)
 │  │  ├─ Atm.Infrastructure/  # EF Core + SQLite (→ Application, Domain)
 │  │  └─ Atm.Api/             # Controllers and DI wiring (→ Application, Infrastructure)
