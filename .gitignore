@@ -1,0 +1,13 @@
+# .NET build output
+bin/
+obj/
+
+# Frontend dependencies and build output
+node_modules/
+dist/
+
+# Local SQLite database (auto-created and seeded at startup)
+*.db
+
+# Visual Studio local state
+.vs/
