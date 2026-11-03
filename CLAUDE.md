@@ -9,9 +9,9 @@ two bank accounts. The author must be able to **explain and defend every line**,
 cleverness. The grading criteria are architecture, separation of concerns, error handling,
 code quality and readability, and technical tradeoffs.
 
-The original exercise statement is in [docs/REQUIREMENT.md](docs/REQUIREMENT.md) and is the
+The original exercise statement is in [.docs/REQUIREMENT.md](.docs/REQUIREMENT.md) and is the
 source of truth for scope. The implementation plan, scope and decision log are in
-[docs/PLAN.md](docs/PLAN.md). Progress is tracked **only** in [docs/TASKS.md](docs/TASKS.md).
+[.docs/PLAN.md](.docs/PLAN.md). Progress is tracked **only** in [.docs/TASKS.md](.docs/TASKS.md).
 Read all three before starting a task. Tick `[C]` tasks in TASKS.md as they're completed and
 verified, and add new decisions to the PLAN.md decision log.
 
@@ -39,7 +39,7 @@ atm-app/
 │  └─ tests/
 │     ├─ Atm.Domain.Tests/
 │     └─ Atm.Api.Tests/       # Integration tests via WebApplicationFactory.
-├─ docs/
+├─ .docs/
 │  ├─ REQUIREMENT.md          # Original exercise statement (do not edit)
 │  ├─ PLAN.md                 # Plan, gates, decision log, HITL log
 │  ├─ UX.md                   # Lightweight UX spec = acceptance criteria for the UI phase
@@ -98,7 +98,7 @@ npm run test                                 # Vitest unit + component tests
   generic CRUD.
 - Vue: `<script setup lang="ts">`, props/emits typed, no `any`. Components don't call `fetch`
   directly; they go through `src/api`.
-- UI follows [docs/UX.md](docs/UX.md): Tailwind utilities using the `@theme` tokens (no arbitrary
+- UI follows [.docs/UX.md](.docs/UX.md): Tailwind utilities using the `@theme` tokens (no arbitrary
   values like `bg-[#…]`, no component library, `@apply` only sparingly; extract a small component
   when a class list repeats), `Intl` for money and dates, labelled inputs, `aria-live` for status messages, no `alert()`, and never show raw
   JSON or stack traces to the user.
@@ -106,7 +106,7 @@ npm run test                                 # Vitest unit + component tests
 
 ## Working agreement for Claude: human-in-the-loop
 
-This project follows the gate process in [docs/PLAN.md §3](docs/PLAN.md). The human owns decisions;
+This project follows the gate process in [.docs/PLAN.md §3](.docs/PLAN.md). The human owns decisions;
 Claude proposes and implements.
 
 - **Work only on the current phase.** Never start the next phase, or "get ahead" on it,

@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Phase 0, scaffold (Gate 0 approved)
+**Current status:** Phase 0 scaffold complete, awaiting Gate 1 review (Gate 0 approved)
 
 ---
 
@@ -33,32 +33,32 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 
 ## Phase 0: Scaffold (15 min)
 
-- [ ] T0.1 `[C]` Create `backend/Atm.slnx`
-- [ ] T0.2 `[C]` Create the src projects:
+- [x] T0.1 `[C]` Create `backend/Atm.slnx`
+- [x] T0.2 `[C]` Create the src projects:
   - `Atm.Domain`, `Atm.Application`, `Atm.Infrastructure` (class libraries)
   - `Atm.Api` (Web API with controllers)
-- [ ] T0.3 `[C]` Create the test projects `Atm.Domain.Tests` and `Atm.Api.Tests` (xUnit), with the assertion library from decision #12
-- [ ] T0.4 `[C]` Add project references that follow the dependency rule:
+- [x] T0.3 `[C]` Create the test projects `Atm.Domain.Tests` and `Atm.Api.Tests` (xUnit), with the assertion library from decision #12
+- [x] T0.4 `[C]` Add project references that follow the dependency rule:
   - Domain references nothing
   - Application → Domain
   - Infrastructure → Application, Domain
   - Api → Application, Infrastructure
-- [ ] T0.5 `[C]` `backend/Directory.Build.props` with:
+- [x] T0.5 `[C]` `backend/Directory.Build.props` with:
   - `net10.0`
   - nullable enabled
   - implicit usings
   - `TreatWarningsAsErrors`
-- [ ] T0.6 `[C]` Remove the template boilerplate: `Class1.cs`, `UnitTest1.cs`, `WeatherForecast*`
-- [ ] T0.7 `[C]` Scaffold `frontend/` with `create-vite@9.3.3`'s `vue-ts` template, keep its versions (decision #13), and remove the demo components
-- [ ] T0.7b `[C]` Add Tailwind 4 (decision #16): install `tailwindcss` and `@tailwindcss/vite`, register the plugin in `vite.config.ts`, add `@import "tailwindcss";` to `src/style.css`, and confirm one utility class renders
-- [ ] T0.8 `[C]` Root `.gitignore` covering `bin/`, `obj/`, `node_modules/`, `dist/`, `*.db`, and `.vs/`
-- [ ] T0.9 `[C]` Verify that `dotnet build` and `npm run build` both succeed, and that `package-lock.json` is present (to be committed)
-- [ ] T0.10 `[C]` Present the gate packet
+- [x] T0.6 `[C]` Remove the template boilerplate: `Class1.cs`, `UnitTest1.cs`, `WeatherForecast*`
+- [x] T0.7 `[C]` Scaffold `frontend/` with `create-vite@9.3.3`'s `vue-ts` template, keep its versions (decision #13), and remove the demo components
+- [x] T0.7b `[C]` Add Tailwind 4 (decision #16): install `tailwindcss` and `@tailwindcss/vite`, register the plugin in `vite.config.ts`, add `@import "tailwindcss";` to `src/style.css`, and confirm one utility class renders
+- [x] T0.8 `[C]` Root `.gitignore` covering `bin/`, `obj/`, `node_modules/`, `dist/`, `*.db`, and `.vs/`
+- [x] T0.9 `[C]` Verify that `dotnet build` and `npm run build` both succeed, and that `package-lock.json` is present (to be committed)
+- [x] T0.10 `[C]` Present the gate packet
 
 ### Gate 1: Structure (5 min)
-- [ ] G1.1 `[H]` Project references match the dependency rule
-- [ ] G1.2 `[H]` `dotnet build` and `npm run dev` work on my machine
-- [ ] G1.3 `[H]` Review checklist done (PLAN.md §3)
+- [x] G1.1 `[H]` Project references match the dependency rule
+- [x] G1.2 `[H]` `dotnet build` and `npm run dev` work on my machine
+- [x] G1.3 `[H]` Review checklist done (PLAN.md §3)
 - [ ] G1.4 `[H]` HITL log updated, then commit: `chore: scaffold solution and frontend`
 
 ---
