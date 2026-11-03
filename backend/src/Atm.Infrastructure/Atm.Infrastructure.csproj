@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Atm.Application\Atm.Application.csproj" />
+    <ProjectReference Include="..\Atm.Domain\Atm.Domain.csproj" />
+  </ItemGroup>
+</Project>
