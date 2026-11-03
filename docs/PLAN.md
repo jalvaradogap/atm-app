@@ -140,7 +140,7 @@ Then Claude **stops and waits**. Valid responses: `approved`, `change: <what>`, 
 | Insufficient funds, same-account transfer, invalid amount | 422 |
 | Unhandled                                  | 500 (generic message, details only logged) |
 
-## 5. Implementation phases and gates (~3 h 50 min, including review time)
+## 5. Implementation phases and gates (~4 h, including review time)
 
 Review time is part of the budget on purpose: it's where I build the understanding I'll need
 to discuss the code.
@@ -215,27 +215,55 @@ to discuss the code.
 - I run every request in `Atm.Api.http` and check each status code and response body against section 4
 - An unexpected exception returns a generic 500 with no stack trace
 
-### Phase 4a: Frontend data layer (20 min)
+### Phase 4a: Frontend data layer + unit tests (30 min)
 - `types/` with TS types for the DTOs and `ProblemDetails`
 - `api/atmClient.ts`: typed `fetch` wrapper that turns problem+json into an `ApiError`
+- `utils/amount.ts`: a pure `validateAmount()` function (> 0, ≤ 2 decimals, ≤ max) that mirrors
+  the domain rules, so the UI gives instant feedback. The backend stays the authority.
 - `composables/useAccounts.ts`: accounts state, selected account, loading/error, and actions that refresh balances and history
 - Vite proxy `/api` → backend
+- Vitest setup (`jsdom` environment) and `npm run test`
+- Unit tests (with `fetch` / the API module mocked, no backend needed):
+  - `atmClient`:
+    - success returns typed data
+    - a 422 problem+json becomes an `ApiError` with status and detail
+    - a network failure becomes a "cannot reach server" error
+    - a non-JSON 500 becomes a generic error
+  - `validateAmount`: valid, 0, negative, 3 decimals, empty, above max
+  - `useAccounts`:
+    - a successful deposit refreshes balances and history
+    - a failed operation sets the error and leaves balances unchanged
+    - `pending` toggles
 
-**Gate 5: Data layer (5 min)**
+**Gate 5: Data layer + UX preview (8 min)**
 - I can trace one action from button click to HTTP call to state update
+- `npm run test` passes. I break the `ApiError` parsing and see a test fail.
+- I re-read [UX.md](UX.md) and approve or adjust the layout and interactions *before* Phase 4b builds them.
 
-### Phase 4b: Frontend UI (30 min)
+### Phase 4b: Frontend UI + component test (35 min)
+Implements [UX.md](UX.md). The spec is the acceptance criteria for this phase.
 - Components:
-  - `AccountCard`: name, masked number, balance; click to select
-  - `OperationPanel`: tabs for Deposit / Withdraw / Transfer, an amount input with client-side validation, and the submit button disabled while pending
-  - `TransactionHistory`: table with type, amount (+/− colored), balance after, date, and paging
-  - `StatusMessage`: success/error feedback
-- Simple, clean styling (CSS variables, no UI framework), with a usable mobile width
+  - `AccountCard`: name, masked number, balance, selected state (border plus label); click to select
+  - `OperationPanel`:
+    - Deposit / Withdraw / Transfer tabs (accessible tablist)
+    - amount input with inline validation reasons and "Available: $X"
+    - transfer shown as `From → To` with a swap button (no dropdown)
+    - submit button labelled with the action and amount, disabled while invalid or pending
+  - `TransactionHistory`: human-readable type, signed and colored amount, balance after, local date. Shows the latest 20, with loading and empty states.
+  - `StatusMessage`: success (with new balances) and error, in an `aria-live` region. Unreachable server shows a banner with Retry.
+- Styling: Tailwind utilities with the theme tokens from UX.md §4, `tabular-nums` for money, `Intl` formatting, and a two-column layout (`md:grid-cols-2`) that collapses to one column below 768 px
+- Component test (`@vue/test-utils`) for `OperationPanel`:
+  - submit disabled for an invalid amount
+  - transfer always targets the other account, and swap reverses the direction
+  - emits the operation with the parsed amount
 
-**Gate 6: UI (5 min)**
+**Gate 6: UI (7 min)**
 - I do every operation and every error path in the browser (overdraft, 0, 3 decimals, backend stopped)
+- Keyboard-only pass: Tab through the page, switch tabs, submit with Enter, focus always visible
+- Phone width (devtools, 375 px): single column, nothing cut off
+- `npm run test` and `npm run build` both pass
 
-### Phase 5: Documentation and final review (20 min)
+### Phase 5: Documentation and final review (15 min)
 - Claude drafts `README.md` covering:
   - how to run
   - architecture overview
@@ -248,29 +276,37 @@ to discuss the code.
 - Clean clone builds and runs by following only the README
 - I can answer every explain-back question from the earlier gates without notes
 
-**Cut line if time runs short:** frontend tests, pagination UI (show the last 50 instead), and
-transaction descriptions get dropped first. Domain tests, error handling, atomic transfers, and
-**the gates themselves** are never cut. Shortening a review defeats the purpose of the approach.
+**Cut line if time runs short:** these get dropped first, in this order:
+1. dark mode (UX.md §4)
+2. the `OperationPanel` component test
+3. transaction descriptions
+
+Never cut: domain tests, API integration tests, the `atmClient` / `validateAmount` unit tests,
+error handling, atomic transfers, and **the gates themselves**. Shortening a review defeats the purpose of the approach.
 
 ## 6. Decision log
 
-Claude proposed every entry below. Each one stays *Proposed* until I accept or change it at Gate 0.
+Claude proposed every entry below. All of #1–16 were accepted at Gate 0.
 Entries added in later phases go through the next gate.
 
 | # | Decision | Alternative considered | Why | Status |
 |---|----------|------------------------|-----|--------|
-| 1 | Layered (Domain / Application / Infrastructure / Api) | Single project with folders | Makes separation of concerns explicit and enforced by project references. Each project stays small, so the overhead is low. | Proposed |
-| 2 | Rich domain model (rules inside `Account`) | Anemic entities + service logic | Invariants live in one place and are unit-testable without a DB. | Proposed |
-| 3 | EF Core + SQLite (file) | EF InMemory provider / static dictionary | Real persistence and real DB transactions for an atomic transfer. Zero setup for the reviewer. The InMemory provider doesn't enforce transactions or concurrency faithfully. | Proposed |
-| 4 | `EnsureCreated` instead of migrations | EF migrations | Single fixed schema in an exercise. Migrations would be the first change for a real app. | Proposed |
-| 5 | Money stored as integer cents | SQLite TEXT decimal / REAL | SQLite has no decimal type. REAL loses precision. Integer cents are exact and sortable. | Proposed |
-| 6 | Exceptions for domain rule violations + global handler | Result<T> pattern | Less ceremony in a small codebase. One central mapping to HTTP. Result<T> would be preferable if failures were very frequent or were composed. | Proposed |
-| 7 | Optimistic concurrency (`Version` token) | Pessimistic locks / none | Cheap protection against lost updates (e.g., two tabs). Surfaces as 409. | Proposed |
-| 8 | Ledger entry per balance change, transfer legs linked by `TransferId` | Single transfer row | Keeps per-account history simple to query and auditable. | Proposed |
-| 9 | No MediatR / AutoMapper / repository-per-entity generics | Typical "enterprise" template | Scope doesn't justify them. Fewer moving parts to explain. | Proposed |
-| 10 | Vue composable for state instead of Pinia | Pinia store | One screen and one state slice, so a composable is enough. Pinia would be the move if more views appear. | Proposed |
-| 11 | Human-in-the-loop gates after every phase | Generate the whole app, then review | Keeps diffs small enough to understand fully, and catches wrong assumptions early, when they're cheap to fix. Costs ~45 min of the budget. | Proposed |
-| 12 | Test assertions: FluentAssertions pinned to **7.x** | FluentAssertions 8.x / Shouldly / plain xUnit `Assert` | v8+ moved to a commercial license (Xceed). 7.x is the last Apache-2.0 version and has the same API. Shouldly is the fallback if pinning an old major isn't wanted. | Proposed |
+| 1 | Layered (Domain / Application / Infrastructure / Api) | Single project with folders | Makes separation of concerns explicit and enforced by project references. Each project stays small, so the overhead is low. | Accepted |
+| 2 | Rich domain model (rules inside `Account`) | Anemic entities + service logic | Invariants live in one place and are unit-testable without a DB. | Accepted |
+| 3 | EF Core + SQLite (file) | EF InMemory provider / static dictionary | Real persistence and real DB transactions for an atomic transfer. Zero setup for the reviewer. The InMemory provider doesn't enforce transactions or concurrency faithfully. | Accepted |
+| 4 | `EnsureCreated` instead of migrations | EF migrations | Single fixed schema in an exercise. Migrations would be the first change for a real app. | Accepted |
+| 5 | Money stored as integer cents | SQLite TEXT decimal / REAL | SQLite has no decimal type. REAL loses precision. Integer cents are exact and sortable. | Accepted |
+| 6 | Exceptions for domain rule violations + global handler | Result<T> pattern | Less ceremony in a small codebase. One central mapping to HTTP. Result<T> would be preferable if failures were very frequent or were composed. | Accepted |
+| 7 | Optimistic concurrency (`Version` token) | Pessimistic locks / none | Cheap protection against lost updates (e.g., two tabs). Surfaces as 409. | Accepted |
+| 8 | Ledger entry per balance change, transfer legs linked by `TransferId` | Single transfer row | Keeps per-account history simple to query and auditable. | Accepted |
+| 9 | No MediatR / AutoMapper / repository-per-entity generics | Typical "enterprise" template | Scope doesn't justify them. Fewer moving parts to explain. | Accepted |
+| 10 | Vue composable for state instead of Pinia | Pinia store | One screen and one state slice, so a composable is enough. Pinia would be the move if more views appear. | Accepted |
+| 11 | Human-in-the-loop gates after every phase | Generate the whole app, then review | Keeps diffs small enough to understand fully, and catches wrong assumptions early, when they're cheap to fix. Costs ~45 min of the budget. | Accepted |
+| 12 | Test assertions: FluentAssertions pinned to **7.x** | FluentAssertions 8.x / Shouldly / plain xUnit `Assert` | v8+ moved to a commercial license (Xceed). 7.x is the last Apache-2.0 version and has the same API. Shouldly is the fallback if pinning an old major isn't wanted. | Accepted |
+| 13 | Frontend versions: Vue **3.5.x**, Vite **8.x**, TypeScript **6.0.x**, as scaffolded by `create-vite` 9.3, with `package-lock.json` committed | Vue 3.6 RC / TypeScript 7.0 (native Go compiler) | Use only stable releases. `vue-tsc` type-checks `.vue` files via the JS TypeScript API, so moving to TS 7 risks breaking the build for no benefit in this scope. The lockfile makes installs reproducible for the reviewer. | Accepted |
+| 14 | Frontend tests: **Vitest 5 + `@vue/test-utils` 2 + jsdom**. Unit tests on the API client, amount validation and the composable, plus one component test. No E2E. | No FE tests / Playwright E2E / snapshot tests | Testing goes where the logic is: error parsing, validation, and state transitions. Components stay thin, so one component test is enough. Vitest reuses the Vite config. Playwright would cover full user flows but costs setup time the timebox doesn't have, so it's listed as a next step. Snapshot tests would break on every markup change without catching real bugs. | Accepted |
+| 15 | Lightweight UX spec ([UX.md](UX.md)): error prevention (swap button instead of a destination picker, inline validation), clear outcome messages, and a baseline of accessibility | No design thought at all | Design isn't scored first, but clarity and error prevention are part of a correct ATM. Paid for by showing the latest 20 history entries instead of "Load more". | Accepted |
+| 16 | Styling with **Tailwind CSS 4** (`@tailwindcss/vite`), with design tokens in an `@theme` block | Hand-written CSS with `:root` tokens / component library (Vuetify, PrimeVue) | Utility classes give a consistent spacing and colour scale, responsive layout (`md:`) and dark mode (`dark:`) almost for free, which saves time on a non-scored area. Unlike a component library, all markup stays explicit and explainable. Cost: 2 build-time dev dependencies, plus long class lists in templates, kept in check by extracting small components instead of overusing `@apply`. | Accepted |
 
 ## 7. HITL log
 

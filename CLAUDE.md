@@ -21,8 +21,8 @@ verified, and add new decisions to the PLAN.md decision log.
 |-----------|---------------------------------------------------------------|
 | Backend   | .NET 10, ASP.NET Core Web API (controllers), C# 13            |
 | Data      | EF Core + SQLite (file `atm.db`, auto-created and seeded)     |
-| Frontend  | Vue 3 + Vite + TypeScript, Composition API (`<script setup>`) |
-| Tests     | xUnit + FluentAssertions 7.x (backend, see decision #12), `WebApplicationFactory` for API tests, Vitest (frontend, optional) |
+| Frontend  | Vue 3.5 + Vite 8 + TypeScript 6.0 (template pin, not 7.x; see decision #13), Composition API (`<script setup>`), Tailwind CSS 4 via `@tailwindcss/vite` (decision #16). Exact versions locked by `package-lock.json`. |
+| Tests     | xUnit + FluentAssertions 7.x (backend, see decision #12), `WebApplicationFactory` for API tests. Frontend: Vitest 5 + `@vue/test-utils` + jsdom (decision #14). |
 
 ## Repository layout
 
@@ -42,6 +42,7 @@ atm-app/
 ├─ docs/
 │  ├─ REQUIREMENT.md          # Original exercise statement (do not edit)
 │  ├─ PLAN.md                 # Plan, gates, decision log, HITL log
+│  ├─ UX.md                   # Lightweight UX spec = acceptance criteria for the UI phase
 │  └─ TASKS.md                # Checklist: the single progress tracker
 └─ frontend/                  # Vue 3 + Vite app
    └─ src/
@@ -65,7 +66,7 @@ cd frontend
 npm install
 npm run dev                                  # http://localhost:5173, proxies /api -> backend
 npm run build
-npm run test                                 # if Vitest was added
+npm run test                                 # Vitest unit + component tests
 ```
 
 ## Architecture rules (keep them)
@@ -97,6 +98,10 @@ npm run test                                 # if Vitest was added
   generic CRUD.
 - Vue: `<script setup lang="ts">`, props/emits typed, no `any`. Components don't call `fetch`
   directly; they go through `src/api`.
+- UI follows [docs/UX.md](docs/UX.md): Tailwind utilities using the `@theme` tokens (no arbitrary
+  values like `bg-[#…]`, no component library, `@apply` only sparingly; extract a small component
+  when a class list repeats), `Intl` for money and dates, labelled inputs, `aria-live` for status messages, no `alert()`, and never show raw
+  JSON or stack traces to the user.
 - Write comments only for *why*, not *what*.
 
 ## Working agreement for Claude: human-in-the-loop
@@ -124,6 +129,8 @@ Claude proposes and implements.
   gate packet.
 - Keep diffs small and reviewable. No speculative code, no features outside PLAN.md scope.
 - Every new domain rule gets a unit test. Every endpoint gets at least one happy-path and one
-  failure-path integration test.
+  failure-path integration test. On the frontend, logic (API client, validation, composables)
+  gets unit tests. Components stay thin, and only `OperationPanel` gets a component test.
+  No snapshot tests.
 - Do not add dependencies beyond the stack above without asking.
 - Do not commit. The human commits after each approved gate (Claude may suggest a message).

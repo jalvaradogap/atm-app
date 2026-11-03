@@ -25,8 +25,8 @@ No authentication; this is a single-user app, per the requirements.
 |----------|------------|
 | Backend  | .NET 10, ASP.NET Core Web API, C# |
 | Data     | EF Core + SQLite (file-based, created and seeded on startup) |
-| Frontend | Vue 3 + Vite + TypeScript |
-| Tests    | xUnit, `WebApplicationFactory` integration tests |
+| Frontend | Vue 3.5 + Vite 8 + TypeScript 6.0, Tailwind CSS 4 |
+| Tests    | Backend: xUnit unit tests + `WebApplicationFactory` integration tests. Frontend: Vitest + Vue Test Utils |
 
 ## Architecture (overview)
 
@@ -64,6 +64,7 @@ atm-app/
 └─ docs/
    ├─ REQUIREMENT.md   # Original exercise statement
    ├─ PLAN.md          # Scope, architecture, phases, decision log
+   ├─ UX.md            # Lightweight UX and design spec
    └─ TASKS.md         # Progress checklist
 ```
 
