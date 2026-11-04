@@ -4,7 +4,7 @@ import { ApiError } from '../api/atmClient'
 import type { AccountDto, TransactionDto } from '../types/api'
 
 /** The UX shows the latest 20 entries, with no "Load more" (decision #15). */
-export const HISTORY_PAGE_SIZE = 20
+const HISTORY_PAGE_SIZE = 20
 
 /**
  * State and actions for the ATM screen. The API is a parameter so tests can pass fakes.

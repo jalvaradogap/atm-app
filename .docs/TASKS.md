@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Gates 3 to 6 approved; Phases 1 to 4b complete. Phase 5 (documentation and final review) not started. Phase 4b is uncommitted.
+**Current status:** All phases and gates complete (Gates 3 to 7 approved by the human). Phase 5 changes are uncommitted: README, frontend cleanup and TASKS.md.
 
 ---
 
@@ -217,19 +217,19 @@ Acceptance criteria for this phase: [UX.md](UX.md).
 
 ## Phase 5: Documentation and final review (15 min)
 
-- [ ] T5.1 `[C]` Finalize `README.md`:
+- [x] T5.1 `[C]` Finalize `README.md`:
   - how to run
   - architecture
   - tradeoffs
   - what I'd do with more time
-- [ ] T5.2 `[H]` Write the README's "How AI was used" section from the HITL log
-- [ ] T5.3 `[C]` Remove unused code, then run `dotnet test`, `npm run test`, and `npm run build` one last time
-- [ ] T5.4 `[C]` Present the gate packet
+- [x] T5.2 `[H]` Write the README's "How AI was used" section from the HITL log
+- [x] T5.3 `[C]` Remove unused code, then run `dotnet test`, `npm run test`, and `npm run build` one last time
+- [x] T5.4 `[C]` Present the gate packet
 
 ### Gate 7: Ready to submit
-- [ ] G7.1 `[H]` A fresh clone builds and runs by following only the README
-- [ ] G7.2 `[H]` I can answer every explain-back question without notes
-- [ ] G7.3 `[H]` Final commit and submit
+- [x] G7.1 `[H]` A fresh clone builds and runs by following only the README
+- [x] G7.2 `[H]` I can answer every explain-back question without notes
+- [x] G7.3 `[H]` Final commit and submit
 
 ---
 

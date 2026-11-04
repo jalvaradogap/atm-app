@@ -1,5 +1,5 @@
 /** Mirrors AmountRules.MaxAmount in the domain. The backend still enforces it. */
-export const AMOUNT_MAX = 1_000_000
+const AMOUNT_MAX = 1_000_000
 
 export type AmountValidation = { valid: true; value: number } | { valid: false; message: string }
 

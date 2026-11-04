@@ -1,5 +1,12 @@
-# Vue 3 + TypeScript + Vite
+# Frontend
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Vue 3 + Vite + TypeScript + Tailwind CSS 4 single-page app for the ATM.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+See the [root README](../README.md) for how to run, test and build the app, and for the project structure.
+
+```bash
+npm install
+npm run dev     # http://localhost:5173, proxies /api to the backend on port 5080
+npm run test
+npm run build
+```

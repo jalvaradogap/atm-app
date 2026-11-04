@@ -18,7 +18,6 @@ function fakeBank(startingBalance: number) {
 
   const api: AccountsApi = {
     list: vi.fn(async () => [account()]),
-    get: vi.fn(async () => account()),
     transactions: vi.fn(async () => ({ items: [...ledger], page: 1, pageSize: 20, totalCount: ledger.length })),
     deposit: vi.fn(async (_id, body) => {
       balance += body.amount

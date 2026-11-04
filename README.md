@@ -3,19 +3,20 @@
 A web-based ATM application for a single user who manages two bank accounts (Checking and
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
-> **Status:** 🚧 Phase 4b (UI) implemented, awaiting review. The app runs end to end: the API has 61 backend tests, and the frontend has 23 unit and component tests. Dark mode is out of scope (cut line).
+> **Status:** Complete, pending final review and sign-off (Phase 5). The app runs end to end:
+> 61 backend tests and 23 frontend tests pass. Dark mode is not included (cut line).
 > See [.docs/TASKS.md](.docs/TASKS.md) for live progress.
 
 ## Features
 
 | Feature | Status |
 |---------|--------|
-| View balances of both accounts | Done (UI and API) |
-| Deposit funds | Done (UI and API) |
-| Withdraw funds (no overdraft) | Done (UI and API) |
-| Transfer between the two accounts (atomic) | Done (UI and API) |
-| Transaction history per account | Done (UI and API) |
-| Clear error messages for invalid operations | Done (UI and API) |
+| View balances of both accounts | Done |
+| Deposit funds | Done |
+| Withdraw funds (no overdraft) | Done |
+| Transfer between the two accounts (atomic) | Done |
+| Transaction history per account (latest 20) | Done |
+| Clear error messages for invalid operations | Done |
 
 No authentication; this is a single-user app, per the requirements.
 
@@ -23,28 +24,43 @@ No authentication; this is a single-user app, per the requirements.
 
 | Layer    | Technology |
 |----------|------------|
-| Backend  | .NET 10, ASP.NET Core Web API, C# |
+| Backend  | .NET 10, ASP.NET Core Web API, C# 13 |
 | Data     | EF Core + SQLite (file-based, created and seeded on startup) |
 | Frontend | Vue 3.5 + Vite 8 + TypeScript 6.0, Tailwind CSS 4 |
-| Tests    | Backend: xUnit unit tests (domain) and persistence tests on in-memory SQLite; `WebApplicationFactory` API tests come later. Frontend: Vitest + Vue Test Utils |
+| Tests    | Backend: xUnit + FluentAssertions 7. Domain unit tests, persistence tests on in-memory SQLite, and API integration tests with `WebApplicationFactory`. Frontend: Vitest + Vue Test Utils (jsdom) |
 
 ## Architecture (overview)
 
 ```
-Vue 3 SPA  ──HTTP/JSON──►  Atm.Api             (controllers, validation, error handling)
-                              │
-                              ▼
-                           Atm.Application     (use cases, DTOs)
-                              │
-                              ▼
-                           Atm.Domain          (accounts, transactions, business rules)
-                              ▲
-                           Atm.Infrastructure  (EF Core + SQLite)
+Vue 3 SPA  ──HTTP/JSON (/api)──►  Atm.Api             (controllers, validation, error handling)
+                                     │
+                                     ▼
+                                  Atm.Application     (AccountService use cases, DTOs, repository port)
+                                     │
+                                     ▼
+                                  Atm.Domain          (Account, Transaction, business rules)
+                                     ▲
+                                  Atm.Infrastructure  (EF Core + SQLite, implements the repository port)
 ```
 
-Business rules (no overdraft, valid amounts, one ledger entry per balance change) live in the
-domain layer. Errors are returned as RFC 7807 `ProblemDetails`. Details and design decisions
-are in [.docs/PLAN.md](.docs/PLAN.md).
+The dependency rule is enforced by project references: Domain references nothing, Application
+references Domain, Infrastructure references Application and Domain, and Api references Application
+and Infrastructure.
+
+The frontend follows the same idea in three layers: components (presentational) → composable
+(`useAccounts`, state and actions) → API client (`src/api`, the only code that calls `fetch`).
+
+**Where the rules live**
+- The domain enforces the money rules: amounts greater than zero, at most 2 decimal places and
+  1,000,000 per operation, no overdraft, no transfer to the same account. Each balance change
+  writes exactly one ledger entry, and the account's `Version` changes with it.
+- A transfer changes both accounts in memory and saves once, so the database writes both legs
+  in one transaction.
+- Errors are RFC 7807 `ProblemDetails`. Domain rule violations return 422, a missing account 404,
+  a concurrent write 409, and a malformed request 400. Anything unexpected returns a generic 500,
+  and the details are only logged.
+
+Full details and every decision are in [.docs/PLAN.md](.docs/PLAN.md).
 
 ## Getting started
 
@@ -60,59 +76,87 @@ Backend (solution `backend/Atm.slnx`):
 cd backend
 dotnet build
 dotnet test
-dotnet run --project src/Atm.Api
+dotnet run --project src/Atm.Api     # http://localhost:5080
 ```
 
-Frontend:
+Frontend (in a second terminal):
 
 ```bash
 cd frontend
 npm install
+npm run test
 npm run build
-npm run dev        # http://localhost:5173 (proxies /api to the backend on port 5080)
-npm run test       # unit tests (Vitest, jsdom)
+npm run dev                          # http://localhost:5173, proxies /api to port 5080
 ```
 
-The API runs on port 5080 and creates `backend/src/Atm.Api/atm.db` with two seeded accounts on first start.
-Requests can be sent from [Atm.Api.http](backend/src/Atm.Api/Atm.Api.http) (VS Code REST Client). Open http://localhost:5173 to use the app.
+Then open **http://localhost:5173**. The API creates `backend/src/Atm.Api/atm.db` with two seeded
+accounts (Checking $1,000 and Savings $5,000) on first start. To delete the data, stop the API and
+remove that file.
 
-## Project structure
-
-```
-atm-app/
-├─ backend/
-│  ├─ Atm.slnx
-│  ├─ Directory.Build.props   # Shared settings: net10.0, nullable, warnings as errors
-│  ├─ src/
-│  │  ├─ Atm.Domain/          # Account, Transaction, amount rule, domain exceptions (references nothing)
-│  │  ├─ Atm.Application/     # AccountService (use cases), DTOs, IAccountRepository (→ Domain)
-│  │  ├─ Atm.Infrastructure/  # AtmDbContext, configurations, cents converter, repository, seeding (→ Application, Domain)
-│  │  └─ Atm.Api/             # Controllers, request validation, ProblemDetails handler, DI wiring (→ Application, Infrastructure)
-│  └─ tests/
-│     ├─ Atm.Domain.Tests/    # xUnit + FluentAssertions 7
-│     ├─ Atm.Infrastructure.Tests/  # Persistence on in-memory SQLite: cents, concurrency, seeding, transfers
-│     └─ Atm.Api.Tests/       # WebApplicationFactory integration tests on in-memory SQLite (xUnit + FluentAssertions 7)
-├─ frontend/                  # Vue 3 + Vite + TypeScript + Tailwind CSS 4: src/api, src/composables, src/types, src/utils
-└─ .docs/
-   ├─ REQUIREMENT.md   # Original exercise statement
-   ├─ PLAN.md          # Scope, architecture, phases, decision log
-   ├─ UX.md            # Lightweight UX and design spec
-   └─ TASKS.md         # Progress checklist
-```
-
-## Development approach
-
-The app is built with AI assistance (Claude Code) using a **human-in-the-loop** process:
-the AI implements one phase at a time and stops at a review gate. I review, run, and approve
-each step before the next one starts. The process is described in
-[.docs/PLAN.md §3](.docs/PLAN.md), and the rules for the AI are in [CLAUDE.md](CLAUDE.md).
+Requests can also be sent one by one from
+[Atm.Api.http](backend/src/Atm.Api/Atm.Api.http) using the VS Code REST Client extension.
 
 ## Design decisions and tradeoffs
-_To be summarized from the decision log ([.docs/PLAN.md §6](.docs/PLAN.md)) once decisions are
-approved._
+
+The full decision log is in [PLAN.md §6](.docs/PLAN.md). The main choices:
+
+- **Layers and rules.** Business rules live on `Account`, not in a service, so they can be unit
+  tested without a database (#2). The layers are separate projects, so the dependency rule is
+  checked by the compiler (#1).
+- **Money as cents.** Stored as integer cents through a value converter, because SQLite has no
+  decimal type and REAL loses precision (#5). Amounts with a fraction of a cent are rejected, not
+  rounded (#19, #28).
+- **Concurrency.** An optimistic `Version` token, checked on every update, so a stale write fails
+  with 409 instead of silently overwriting a balance (#7, #24).
+- **Atomic transfers.** Both legs are changed in memory and saved with one `SaveChangesAsync`, so
+  the database writes them in one transaction (#21).
+- **Ledger.** Every balance change is a ledger entry, and transfer legs share a `TransferId` (#8).
+- **Errors.** Domain exceptions plus one global handler, instead of a `Result<T>` type (#6). One
+  place to change the error contract (#35).
+- **Validation in two places.** The API checks request shape (400) and the amount range, and the
+  domain checks every rule (422). The domain is the authority (#34).
+- **No heavy frameworks.** No MediatR, AutoMapper or generic repositories (#9). The frontend uses a
+  composable rather than Pinia (#10). The API is passed into the composable, so tests can use fakes
+  without mocking `fetch` (#38).
+- **Frontend validation.** The browser validates the amount for instant feedback, but the backend
+  stays the authority (#39).
+- **Swap instead of a destination picker.** With two accounts, the transfer form has a swap button,
+  so a same-account transfer can't be chosen (#41, UX §3).
+- **Trade-off on plain HTTP.** The API runs on plain HTTP on localhost, with no HTTPS redirect (#33).
+- **Seeding and schema.** `EnsureCreated` with no migrations, since the schema is fixed (#4). The
+  database is seeded at startup (#30, #37).
 
 ## How AI was used
-_To be written by the author._
+
+I built this with Claude Code, using a human-in-the-loop process. The work was split into gated phases, and the AI stopped at the end of each one. Before the next phase started, I reviewed the code, ran the tests and the app, and approved or changed each step. The decisions are in [PLAN.md §6](.docs/PLAN.md), and the record of my review and changes is in [PLAN.md §7](.docs/PLAN.md).
+
+The planning documents built on each other:
+- **Requirements** ([`.docs/REQUIREMENT.md`](.docs/REQUIREMENT.md)): the exercise statement, which sets the scope.
+- **Plan** ([`.docs/PLAN.md`](.docs/PLAN.md)): the architecture, phases, gates and decisions.
+- **Tasks** ([`.docs/TASKS.md`](.docs/TASKS.md)): the checklist of implementation steps and the only progress tracker.
+
+Higher-level work, such as the requirements and the plan, was done with Claude Opus 5.5. The task breakdown and most of the implementation were done with Claude Haiku 5.5.
+
+The AI made mistakes that the tests or my review caught. For example, EF Core treated new ledger rows as existing rows until the key mapping was set explicitly, and ASP.NET failed at runtime on validation attributes placed on record properties, which an error handler had hidden behind a 500. I can explain the design choices in the code, including the ones the AI proposed.
 
 ## What I'd do with more time
-_To be completed at the end of the exercise._
+
+- **Schema and data.** Replace `EnsureCreated` with migrations, and move the demo seeding behind a
+  setting (#4).
+- **Concurrency.** Add the two-simultaneous-withdrawals integration test (stretch item S.1), and
+  check that the 409 response reaches the UI.
+- **Transactions.** Show a description for each transaction in the UI (stretch S.2), and add
+  paging in the history view (the API already supports it).
+- **Confirmation and receipts.** Add an optional confirm step for larger amounts, and show a receipt.
+- **Money on the wire.** Send amounts as strings rather than JSON numbers, which removes any
+  question of floating-point conversion between the browser and the server.
+- **Security and identity.** Authentication and card/PIN flows, which are out of scope now.
+- **End-to-end tests.** Add Playwright tests for the full user flows (decision #14 lists this as a
+  next step).
+- **Accessibility and polish.** Dark mode, and a check of contrast and keyboard order with an
+  accessibility tool.
+- **Generated client.** Generate the frontend API types from the OpenAPI document, so the DTO types
+  can't drift from the backend.
+- **Idempotency.** Idempotency keys for retried requests (out of scope in PLAN §1).
+- **Counterparty in the API.** The history currently derives transfer labels from the account list,
+  which works only with two accounts. The API could return the counterparty name directly.

@@ -8,11 +8,9 @@ import type {
 } from '../types/api'
 import { request } from './atmClient'
 
-/** The endpoints from PLAN.md §4, one function each. Components use this, never fetch. */
+/** The endpoints the screen uses, one function each (PLAN.md §4). Components use this, never fetch. */
 export const accountsApi = {
   list: () => request<AccountDto[]>('GET', '/accounts'),
-
-  get: (id: string) => request<AccountDto>('GET', `/accounts/${id}`),
 
   transactions: (id: string, page = 1, pageSize = 20) =>
     request<PagedResult<TransactionDto>>('GET', `/accounts/${id}/transactions?page=${page}&pageSize=${pageSize}`),
