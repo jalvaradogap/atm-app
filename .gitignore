@@ -11,3 +11,7 @@ dist/
 
 # Visual Studio local state
 .vs/
+
+# SQLite journal files for the local database
+*.db-shm
+*.db-wal
