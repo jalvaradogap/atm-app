@@ -3,9 +3,9 @@
 A web-based ATM application for a single user who manages two bank accounts (Checking and
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
-> **Status:** Complete, pending final review and sign-off (Phase 5). The app runs end to end:
+> **Status:** Done. All phases and gates are complete, and the app runs end to end:
 > 62 backend tests and 23 frontend tests pass. Dark mode is not included (cut line).
-> See [.docs/TASKS.md](.docs/TASKS.md) for live progress.
+> See [.docs/TASKS.md](.docs/TASKS.md) for the full checklist.
 
 ## Features
 
@@ -61,6 +61,33 @@ The frontend follows the same idea in three layers: components (presentational) 
   and the details are only logged.
 
 Full details and every decision are in [.docs/PLAN.md](.docs/PLAN.md).
+
+## Project structure
+
+```
+atm-app/
+├─ README.md
+├─ .docs/                       # REQUIREMENT, PLAN (decision log), UX spec, TASKS checklist
+├─ backend/
+│  ├─ Atm.slnx
+│  ├─ Directory.Build.props     # Shared settings: net10.0, nullable, warnings as errors
+│  ├─ src/
+│  │  ├─ Atm.Domain/            # Account, Transaction, AmountRules, domain exceptions
+│  │  ├─ Atm.Application/       # AccountService, DTOs, IAccountRepository
+│  │  ├─ Atm.Infrastructure/    # AtmDbContext, EF configurations, cents converter, seeding
+│  │  └─ Atm.Api/               # Controllers, request records, GlobalExceptionHandler, Program.cs
+│  └─ tests/
+│     ├─ Atm.Domain.Tests/          # Unit tests for the business rules
+│     ├─ Atm.Infrastructure.Tests/  # Persistence tests on in-memory SQLite
+│     └─ Atm.Api.Tests/             # Integration tests with WebApplicationFactory
+└─ frontend/
+   └─ src/
+      ├─ api/                   # Typed HTTP client (the only code that calls fetch)
+      ├─ composables/           # useAccounts: state and actions
+      ├─ components/            # AccountCard, OperationPanel, TransactionHistory, StatusMessage, ServerBanner
+      ├─ types/                 # TypeScript types mirroring the API DTOs
+      └─ utils/                 # Amount validation and Intl formatting
+```
 
 ## Getting started
 
@@ -143,10 +170,8 @@ The AI made mistakes that the tests or my review caught. For example, EF Core tr
 
 - **Schema and data.** Replace `EnsureCreated` with migrations, and move the demo seeding behind a
   setting (#4).
-- **Concurrency.** Add the two-simultaneous-withdrawals integration test (stretch item S.1), and
-  check that the 409 response reaches the UI.
-- **Transactions.** Show a description for each transaction in the UI (stretch S.2), and add
-  paging in the history view (the API already supports it).
+- **History paging.** Add paging in the history view, which shows the latest 20 entries (the API
+  already supports paging).
 - **Confirmation and receipts.** Add an optional confirm step for larger amounts, and show a receipt.
 - **Money on the wire.** Send amounts as strings rather than JSON numbers, which removes any
   question of floating-point conversion between the browser and the server.

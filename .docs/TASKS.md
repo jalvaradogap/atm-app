@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** All phases and gates complete (Gates 3 to 7 approved by the human). Phase 5 changes are uncommitted: README, frontend cleanup and TASKS.md.
+**Current status:** Done. All phases and gates are complete (Gates 3 to 7 approved by the human).
 
 ---
 

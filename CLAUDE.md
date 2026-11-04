@@ -38,6 +38,7 @@ atm-app/
 │  │  └─ Atm.Api/             # Controllers, request validation, exception → ProblemDetails, DI wiring.
 │  └─ tests/
 │     ├─ Atm.Domain.Tests/
+│     ├─ Atm.Infrastructure.Tests/  # Persistence tests on in-memory SQLite (decision #29).
 │     └─ Atm.Api.Tests/       # Integration tests via WebApplicationFactory.
 ├─ .docs/
 │  ├─ REQUIREMENT.md          # Original exercise statement (do not edit)
