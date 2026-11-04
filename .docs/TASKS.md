@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Gates 3 and 4 approved; Phase 3 (API) complete. Phase 4a complete (16 frontend tests passing; decisions #38–#40 accepted). Gate 5 items pending the human ticks.
+**Current status:** Gates 3, 4 and 5 approved; Phases 3 and 4a complete. Phase 4b (UI) implemented: 23 frontend tests and the production build pass. Gate 6 pending the human checks.
 
 ---
 
@@ -184,34 +184,34 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 
 Acceptance criteria for this phase: [UX.md](UX.md).
 
-- [ ] T4b.1 `[C]` Theme tokens in an `@theme` block in `src/style.css` (accent, success, danger, surface). Formatting helpers in `src/utils/format.ts` (`Intl` currency and date, human-readable transaction labels).
-- [ ] T4b.2 `[C]` `AccountCard`: name, masked number, balance, and the selected state (border plus label)
-- [ ] T4b.3 `[C]` `OperationPanel`:
+- [x] T4b.1 `[C]` Theme tokens in an `@theme` block in `src/style.css` (accent, success, danger, surface). Formatting helpers in `src/utils/format.ts` (`Intl` currency and date, human-readable transaction labels).
+- [x] T4b.2 `[C]` `AccountCard`: name, masked number, balance, and the selected state (border plus label)
+- [x] T4b.3 `[C]` `OperationPanel`:
   - an accessible tablist for Deposit / Withdraw / Transfer
   - inline validation reasons, plus "Available: $X"
   - transfer shown as `From → To` with a swap button
   - submit labelled with the action and amount, disabled while invalid or pending, and Enter submits
-- [ ] T4b.4 `[C]` `TransactionHistory`: readable labels, signed and colored amounts, the balance after, local dates, the latest 20, and loading/empty states
-- [ ] T4b.5 `[C]` `StatusMessage` (`aria-live`) for success with new balances or an error, plus an unreachable-server banner with Retry
-- [ ] T4b.6 `[C]` `App.vue` layout: two columns that collapse to one below 768 px
-- [ ] T4b.7 `[C]` `OperationPanel` component test:
-  - [ ] submit disabled for an invalid amount
-  - [ ] transfer always targets the other account, and swap reverses it
-  - [ ] emits the operation with the parsed amount
-- [ ] T4b.8 `[C]` `npm run test` and `npm run build` pass, README updated, then present the gate packet
+- [x] T4b.4 `[C]` `TransactionHistory`: readable labels, signed and colored amounts, the balance after, local dates, the latest 20, and loading/empty states
+- [x] T4b.5 `[C]` `StatusMessage` (`aria-live`) for success with new balances or an error, plus an unreachable-server banner with Retry
+- [x] T4b.6 `[C]` `App.vue` layout: two columns that collapse to one below 768 px
+- [x] T4b.7 `[C]` `OperationPanel` component test:
+  - [x] submit disabled for an invalid amount
+  - [x] transfer always targets the other account, and swap reverses it
+  - [x] emits the operation with the parsed amount
+- [x] T4b.8 `[C]` `npm run test` and `npm run build` pass, README updated, then present the gate packet
 
 ### Gate 6: UI (7 min)
-- [ ] G6.1 `[H]` Deposit, withdraw, and transfer all work, and both balances and the history refresh
-- [ ] G6.2 `[H]` Each error path shows a clear message:
-  - [ ] overdraft
-  - [ ] amount 0
-  - [ ] 3 decimals
-  - [ ] transfer to the same account (impossible by design, since only swap is available)
-  - [ ] backend stopped (banner + Retry)
-- [ ] G6.2b `[H]` Keyboard-only pass: Tab, switch tabs, submit with Enter, focus always visible
-- [ ] G6.2c `[H]` Phone width (375 px in devtools): single column, nothing cut off
-- [ ] G6.3 `[H]` Review checklist done (PLAN.md §3)
-- [ ] G6.4 `[H]` HITL log updated, then commit: `feat(web): ATM user interface`
+- [x] G6.1 `[H]` Deposit, withdraw, and transfer all work, and both balances and the history refresh
+- [x] G6.2 `[H]` Each error path shows a clear message:
+  - [x] overdraft
+  - [x] amount 0
+  - [x] 3 decimals
+  - [x] transfer to the same account (impossible by design, since only swap is available)
+  - [x] backend stopped (banner + Retry)
+- [x] G6.2b `[H]` Keyboard-only pass: Tab, switch tabs, submit with Enter, focus always visible
+- [x] G6.2c `[H]` Phone width (375 px in devtools): single column, nothing cut off
+- [x] G6.3 `[H]` Review checklist done (PLAN.md §3)
+- [x] G6.4 `[H]` HITL log updated, then commit: `feat(web): ATM user interface`
 
 ---
 

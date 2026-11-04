@@ -3,19 +3,19 @@
 A web-based ATM application for a single user who manages two bank accounts (Checking and
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
-> **Status:** 🚧 Phase 4a (frontend data layer) implemented, awaiting review. The API is tested (61 backend tests) and the typed client, amount validation and state composable are tested (16 frontend tests). The screens come next, in Phase 4b.
+> **Status:** 🚧 Phase 4b (UI) implemented, awaiting review. The app runs end to end: the API has 61 backend tests, and the frontend has 23 unit and component tests. Dark mode is out of scope (cut line).
 > See [.docs/TASKS.md](.docs/TASKS.md) for live progress.
 
 ## Features
 
 | Feature | Status |
 |---------|--------|
-| View balances of both accounts | API done, UI next |
-| Deposit funds | API done, UI next |
-| Withdraw funds (no overdraft) | API done, UI next |
-| Transfer between the two accounts (atomic) | API done, UI next |
-| Transaction history per account | API done, UI next |
-| Clear error messages for invalid operations | API done, UI next |
+| View balances of both accounts | Done (UI and API) |
+| Deposit funds | Done (UI and API) |
+| Withdraw funds (no overdraft) | Done (UI and API) |
+| Transfer between the two accounts (atomic) | Done (UI and API) |
+| Transaction history per account | Done (UI and API) |
+| Clear error messages for invalid operations | Done (UI and API) |
 
 No authentication; this is a single-user app, per the requirements.
 
@@ -74,8 +74,7 @@ npm run test       # unit tests (Vitest, jsdom)
 ```
 
 The API runs on port 5080 and creates `backend/src/Atm.Api/atm.db` with two seeded accounts on first start.
-Requests can be sent from [Atm.Api.http](backend/src/Atm.Api/Atm.Api.http) (VS Code REST Client). The UI is
-not implemented yet, so the app is not usable in a browser until Phase 4.
+Requests can be sent from [Atm.Api.http](backend/src/Atm.Api/Atm.Api.http) (VS Code REST Client). Open http://localhost:5173 to use the app.
 
 ## Project structure
 

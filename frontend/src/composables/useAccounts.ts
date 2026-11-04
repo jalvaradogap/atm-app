@@ -80,9 +80,10 @@ export function useAccounts(api: AccountsApi = defaultApi) {
     })
   }
 
-  function transfer(toAccountId: string, amount: number, description?: string): Promise<boolean> {
+  /** The source is explicit, because the transfer form can swap the direction. */
+  function transfer(fromAccountId: string, toAccountId: string, amount: number, description?: string): Promise<boolean> {
     return attempt(async () => {
-      await api.transfer({ fromAccountId: requireSelected(), toAccountId, amount, description })
+      await api.transfer({ fromAccountId, toAccountId, amount, description })
       await refresh()
     })
   }

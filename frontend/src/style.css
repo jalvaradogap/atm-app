@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+/* Design tokens (UX.md §4). Components use these names, never one-off colours like bg-[#...]. */
+@theme {
+  --color-page: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-ink: #0f172a;
+  --color-muted: #475569;
+  --color-accent: #1d4ed8;
+  --color-success: #15803d;
+  --color-danger: #b91c1c;
+}
+
+/* The card look is repeated on several panels, so it is one utility rather than a copied class list. */
+@utility card {
+  @apply rounded-lg bg-surface p-5 shadow-sm ring-1 ring-slate-200;
+}
+
+body {
+  @apply bg-page text-ink antialiased;
+}
