@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Gates 3, 4 and 5 approved; Phases 3 and 4a complete. Phase 4b (UI) implemented: 23 frontend tests and the production build pass. Gate 6 pending the human checks.
+**Current status:** Gates 3 to 6 approved; Phases 1 to 4b complete. Phase 5 (documentation and final review) not started. Phase 4b is uncommitted.
 
 ---
 
@@ -68,7 +68,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - [x] T1.1 `[C]` Propose the domain test case list (names plus expected outcomes, no code)
 
 ### Mini-gate 1a: Test spec (5 min)
-- [ ] M1.1 `[H]` Approve, add, or remove test cases
+- [x] M1.1 `[H]` Approve, add, or remove test cases
 
 - [x] T1.2 `[C]` `TransactionType` enum: `Deposit`, `Withdrawal`, `TransferIn`, `TransferOut`
 - [x] T1.3 `[C]` `Transaction` entity: immutable, created only through `Account`
