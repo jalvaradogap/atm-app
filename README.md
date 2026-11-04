@@ -3,7 +3,7 @@
 A web-based ATM application for a single user who manages two bank accounts (Checking and
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
-> **Status:** 🚧 Phase 3 (API) implemented, awaiting review. The REST API is tested end to end (61 backend tests). The UI is next, in Phase 4.
+> **Status:** 🚧 Phase 4a (frontend data layer) implemented, awaiting review. The API is tested (61 backend tests) and the typed client, amount validation and state composable are tested (16 frontend tests). The screens come next, in Phase 4b.
 > See [.docs/TASKS.md](.docs/TASKS.md) for live progress.
 
 ## Features
@@ -69,7 +69,8 @@ Frontend:
 cd frontend
 npm install
 npm run build
-npm run dev        # http://localhost:5173
+npm run dev        # http://localhost:5173 (proxies /api to the backend on port 5080)
+npm run test       # unit tests (Vitest, jsdom)
 ```
 
 The API runs on port 5080 and creates `backend/src/Atm.Api/atm.db` with two seeded accounts on first start.
@@ -92,7 +93,7 @@ atm-app/
 │     ├─ Atm.Domain.Tests/    # xUnit + FluentAssertions 7
 │     ├─ Atm.Infrastructure.Tests/  # Persistence on in-memory SQLite: cents, concurrency, seeding, transfers
 │     └─ Atm.Api.Tests/       # WebApplicationFactory integration tests on in-memory SQLite (xUnit + FluentAssertions 7)
-├─ frontend/                  # Vue 3 + Vite + TypeScript + Tailwind CSS 4
+├─ frontend/                  # Vue 3 + Vite + TypeScript + Tailwind CSS 4: src/api, src/composables, src/types, src/utils
 └─ .docs/
    ├─ REQUIREMENT.md   # Original exercise statement
    ├─ PLAN.md          # Scope, architecture, phases, decision log

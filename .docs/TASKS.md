@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Gates 3 and 4 approved; Phase 3 (API) complete. Phase 4a not started.
+**Current status:** Gates 3 and 4 approved; Phase 3 (API) complete. Phase 4a complete (16 frontend tests passing; decisions #38–#40 accepted). Gate 5 items pending the human ticks.
 
 ---
 
@@ -154,29 +154,29 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 
 ## Phase 4a: Frontend data layer + unit tests (30 min)
 
-- [ ] T4a.1 `[C]` `src/types/`: DTO types and `ProblemDetails`
-- [ ] T4a.2 `[C]` `src/api/atmClient.ts`: a typed `fetch` wrapper, plus an `ApiError` built from problem+json
-- [ ] T4a.3 `[C]` `src/utils/amount.ts`: pure `validateAmount()` (> 0, ≤ 2 decimals, ≤ max)
-- [ ] T4a.4 `[C]` `src/composables/useAccounts.ts`: state, selection, loading/error, and actions that refresh the data
-- [ ] T4a.5 `[C]` Vite proxy from `/api` to `http://localhost:5080`
-- [ ] T4a.6 `[C]` Vitest setup: install `vitest`, `@vue/test-utils`, and `jsdom` (decision #14), configure the jsdom environment, and add the `npm run test` script
-- [ ] T4a.7 `[C]` Unit tests, with `fetch` / the API module mocked:
-  - [ ] `atmClient`: success returns typed data
-  - [ ] `atmClient`: a 422 problem+json becomes an `ApiError` with status and detail
-  - [ ] `atmClient`: a network failure becomes a "cannot reach server" error
-  - [ ] `atmClient`: a non-JSON 500 becomes a generic error
-  - [ ] `validateAmount`: valid, 0, negative, 3 decimals, empty, above max
-  - [ ] `useAccounts`: a successful deposit refreshes balances and history
-  - [ ] `useAccounts`: a failed operation sets the error and leaves balances unchanged
-  - [ ] `useAccounts`: `pending` toggles during an operation
-- [ ] T4a.8 `[C]` `npm run test` and `npm run build` (type check) pass, README updated, then present the gate packet
+- [x] T4a.1 `[C]` `src/types/`: DTO types and `ProblemDetails`
+- [x] T4a.2 `[C]` `src/api/atmClient.ts`: a typed `fetch` wrapper, plus an `ApiError` built from problem+json
+- [x] T4a.3 `[C]` `src/utils/amount.ts`: pure `validateAmount()` (> 0, ≤ 2 decimals, ≤ max)
+- [x] T4a.4 `[C]` `src/composables/useAccounts.ts`: state, selection, loading/error, and actions that refresh the data
+- [x] T4a.5 `[C]` Vite proxy from `/api` to `http://localhost:5080`
+- [x] T4a.6 `[C]` Vitest setup: install `vitest`, `@vue/test-utils`, and `jsdom` (decision #14), configure the jsdom environment, and add the `npm run test` script
+- [x] T4a.7 `[C]` Unit tests, with `fetch` / the API module mocked:
+  - [x] `atmClient`: success returns typed data
+  - [x] `atmClient`: a 422 problem+json becomes an `ApiError` with status and detail
+  - [x] `atmClient`: a network failure becomes a "cannot reach server" error
+  - [x] `atmClient`: a non-JSON 500 becomes a generic error
+  - [x] `validateAmount`: valid, 0, negative, 3 decimals, empty, above max
+  - [x] `useAccounts`: a successful deposit refreshes balances and history
+  - [x] `useAccounts`: a failed operation sets the error and leaves balances unchanged
+  - [x] `useAccounts`: `pending` toggles during an operation
+- [x] T4a.8 `[C]` `npm run test` and `npm run build` (type check) pass, README updated, then present the gate packet
 
 ### Gate 5: Data layer + UX preview (8 min)
-- [ ] G5.1 `[H]` I can trace a single action: click → API call → state update
-- [ ] G5.2 `[H]` Break the `ApiError` parsing, see a test fail, then revert
-- [ ] G5.2b `[H]` Re-read [UX.md](UX.md) and approve or adjust it before Phase 4b starts
-- [ ] G5.3 `[H]` Review checklist done (PLAN.md §3)
-- [ ] G5.4 `[H]` HITL log updated, then commit: `feat(web): api client, state composable and unit tests`
+- [x] G5.1 `[H]` I can trace a single action: click → API call → state update
+- [x] G5.2 `[H]` Break the `ApiError` parsing, see a test fail, then revert
+- [x] G5.2b `[H]` Re-read [UX.md](UX.md) and approve or adjust it before Phase 4b starts
+- [x] G5.3 `[H]` Review checklist done (PLAN.md §3)
+- [x] G5.4 `[H]` HITL log updated, then commit: `feat(web): api client, state composable and unit tests`
 
 ---
 
