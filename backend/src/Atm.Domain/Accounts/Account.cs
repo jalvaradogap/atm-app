@@ -27,6 +27,12 @@ public sealed class Account
 
     public decimal Balance { get; private set; }
 
+    /// <summary>
+    /// Optimistic-concurrency token. Persistence uses it to reject a save based on a stale read.
+    /// It is bumped in <see cref="Record"/>, the one place every balance change passes through.
+    /// </summary>
+    public int Version { get; private set; }
+
     public IReadOnlyList<Transaction> Transactions => _transactions;
 
     /// <summary>Opens an account at zero. Opening amounts are made as ordinary deposits, so they appear in the ledger.</summary>
@@ -97,6 +103,7 @@ public sealed class Account
 
     private void Record(TransactionType type, decimal amount, Guid? transferId, string? description)
     {
+        Version++;
         _transactions.Add(new Transaction(
             Guid.NewGuid(),
             Id,

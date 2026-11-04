@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Phase 1 (domain) complete, Gate 2 approved; awaiting your commit. Phase 2 not started.
+**Current status:** Phase 2 (application + persistence) implemented and verified; awaiting Gate 3 review. Phase 1 approved at Gate 2.
 
 ---
 
@@ -94,18 +94,18 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 
 ## Phase 2: Application + Infrastructure (30 min)
 
-- [ ] T2.1 `[C]` DTOs (`AccountDto`, `TransactionDto`, `PagedResult<T>`, `TransferResultDto`), plus static mapping
-- [ ] T2.2 `[C]` `IAccountRepository` interface in Application
-- [ ] T2.3 `[C]` `AccountService` queries: `GetAccounts`, `GetAccount`, `GetTransactions` (paged, newest first)
-- [ ] T2.4 `[C]` `AccountService` commands: `Deposit`, `Withdraw`
-- [ ] T2.5 `[C]` `AccountService.Transfer`: same-account check, both legs, a single `SaveChangesAsync`
-- [ ] T2.6 `[C]` `AtmDbContext` and entity configurations
-- [ ] T2.7 `[C]` Value converter that stores `decimal` as integer cents
-- [ ] T2.8 `[C]` `Version` concurrency token, incremented on every balance change
-- [ ] T2.9 `[C]` `AccountRepository` implementation
-- [ ] T2.10 `[C]` Seed Checking $1,000 and Savings $5,000 via `EnsureCreated`, plus an `AddInfrastructure()` DI extension
-- [ ] T2.11 `[C]` Test that the cents converter round-trips 0.10 and 999.99
-- [ ] T2.12 `[C]` Build and tests green, then present the gate packet
+- [x] T2.1 `[C]` DTOs (`AccountDto`, `TransactionDto`, `PagedResult<T>`, `TransferResultDto`), plus static mapping
+- [x] T2.2 `[C]` `IAccountRepository` interface in Application
+- [x] T2.3 `[C]` `AccountService` queries: `GetAccounts`, `GetAccount`, `GetTransactions` (paged, newest first)
+- [x] T2.4 `[C]` `AccountService` commands: `Deposit`, `Withdraw`
+- [x] T2.5 `[C]` `AccountService.Transfer`: same-account check, both legs, a single `SaveChangesAsync`
+- [x] T2.6 `[C]` `AtmDbContext` and entity configurations
+- [x] T2.7 `[C]` Value converter that stores `decimal` as integer cents
+- [x] T2.8 `[C]` `Version` concurrency token, incremented on every balance change
+- [x] T2.9 `[C]` `AccountRepository` implementation
+- [x] T2.10 `[C]` Seed Checking $1,000 and Savings $5,000 via `EnsureCreated`, plus an `AddInfrastructure()` DI extension
+- [x] T2.11 `[C]` Test that the cents converter round-trips 0.10 and 999.99
+- [x] T2.12 `[C]` Build and tests green, then present the gate packet
 
 ### Gate 3: Persistence (10 min)
 - [ ] G3.1 `[H]` I can explain how the transfer is atomic (single `SaveChangesAsync`)

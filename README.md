@@ -3,7 +3,7 @@
 A web-based ATM application for a single user who manages two bank accounts (Checking and
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
-> **Status:** 🚧 Phase 1 (domain) implemented, awaiting review. Account rules and ledger are unit tested; no API or UI yet.
+> **Status:** 🚧 Phase 2 (application + persistence) implemented, awaiting review. Account rules, the ledger, the application service, and SQLite persistence (cents storage, optimistic concurrency, atomic transfers) are tested. No API or UI yet.
 > See [.docs/TASKS.md](.docs/TASKS.md) for live progress.
 
 ## Features
@@ -26,7 +26,7 @@ No authentication; this is a single-user app, per the requirements.
 | Backend  | .NET 10, ASP.NET Core Web API, C# |
 | Data     | EF Core + SQLite (file-based, created and seeded on startup) |
 | Frontend | Vue 3.5 + Vite 8 + TypeScript 6.0, Tailwind CSS 4 |
-| Tests    | Backend: xUnit unit tests + `WebApplicationFactory` integration tests. Frontend: Vitest + Vue Test Utils |
+| Tests    | Backend: xUnit unit tests (domain) and persistence tests on in-memory SQLite; `WebApplicationFactory` API tests come later. Frontend: Vitest + Vue Test Utils |
 
 ## Architecture (overview)
 
@@ -84,11 +84,12 @@ atm-app/
 │  ├─ Directory.Build.props   # Shared settings: net10.0, nullable, warnings as errors
 │  ├─ src/
 │  │  ├─ Atm.Domain/          # Account, Transaction, amount rule, domain exceptions (references nothing)
-│  │  ├─ Atm.Application/     # Use cases and DTOs (→ Domain)
-│  │  ├─ Atm.Infrastructure/  # EF Core + SQLite (→ Application, Domain)
+│  │  ├─ Atm.Application/     # AccountService (use cases), DTOs, IAccountRepository (→ Domain)
+│  │  ├─ Atm.Infrastructure/  # AtmDbContext, configurations, cents converter, repository, seeding (→ Application, Domain)
 │  │  └─ Atm.Api/             # Controllers and DI wiring (→ Application, Infrastructure)
 │  └─ tests/
 │     ├─ Atm.Domain.Tests/    # xUnit + FluentAssertions 7
+│     ├─ Atm.Infrastructure.Tests/  # Persistence on in-memory SQLite: cents, concurrency, seeding, transfers
 │     └─ Atm.Api.Tests/       # xUnit + FluentAssertions 7 (integration tests later)
 ├─ frontend/                  # Vue 3 + Vite + TypeScript + Tailwind CSS 4
 └─ .docs/

@@ -3,4 +3,7 @@
     <ProjectReference Include="..\Atm.Application\Atm.Application.csproj" />
     <ProjectReference Include="..\Atm.Domain\Atm.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+  </ItemGroup>
 </Project>
