@@ -3,19 +3,19 @@
 A web-based ATM application for a single user who manages two bank accounts (Checking and
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
-> **Status:** 🚧 Phase 2 (application + persistence) implemented, awaiting review. Account rules, the ledger, the application service, and SQLite persistence (cents storage, optimistic concurrency, atomic transfers) are tested. No API or UI yet.
+> **Status:** 🚧 Phase 3 (API) implemented, awaiting review. The REST API is tested end to end (61 backend tests). The UI is next, in Phase 4.
 > See [.docs/TASKS.md](.docs/TASKS.md) for live progress.
 
 ## Features
 
 | Feature | Status |
 |---------|--------|
-| View balances of both accounts | Planned |
-| Deposit funds | Planned |
-| Withdraw funds (no overdraft) | Planned |
-| Transfer between the two accounts (atomic) | Planned |
-| Transaction history per account | Planned |
-| Clear error messages for invalid operations | Planned |
+| View balances of both accounts | API done, UI next |
+| Deposit funds | API done, UI next |
+| Withdraw funds (no overdraft) | API done, UI next |
+| Transfer between the two accounts (atomic) | API done, UI next |
+| Transaction history per account | API done, UI next |
+| Clear error messages for invalid operations | API done, UI next |
 
 No authentication; this is a single-user app, per the requirements.
 
@@ -72,8 +72,9 @@ npm run build
 npm run dev        # http://localhost:5173
 ```
 
-The API endpoints and the UI are not implemented yet, so the app is not usable end to end
-until later phases land.
+The API runs on port 5080 and creates `backend/src/Atm.Api/atm.db` with two seeded accounts on first start.
+Requests can be sent from [Atm.Api.http](backend/src/Atm.Api/Atm.Api.http) (VS Code REST Client). The UI is
+not implemented yet, so the app is not usable in a browser until Phase 4.
 
 ## Project structure
 
@@ -86,11 +87,11 @@ atm-app/
 │  │  ├─ Atm.Domain/          # Account, Transaction, amount rule, domain exceptions (references nothing)
 │  │  ├─ Atm.Application/     # AccountService (use cases), DTOs, IAccountRepository (→ Domain)
 │  │  ├─ Atm.Infrastructure/  # AtmDbContext, configurations, cents converter, repository, seeding (→ Application, Domain)
-│  │  └─ Atm.Api/             # Controllers and DI wiring (→ Application, Infrastructure)
+│  │  └─ Atm.Api/             # Controllers, request validation, ProblemDetails handler, DI wiring (→ Application, Infrastructure)
 │  └─ tests/
 │     ├─ Atm.Domain.Tests/    # xUnit + FluentAssertions 7
 │     ├─ Atm.Infrastructure.Tests/  # Persistence on in-memory SQLite: cents, concurrency, seeding, transfers
-│     └─ Atm.Api.Tests/       # xUnit + FluentAssertions 7 (integration tests later)
+│     └─ Atm.Api.Tests/       # WebApplicationFactory integration tests on in-memory SQLite (xUnit + FluentAssertions 7)
 ├─ frontend/                  # Vue 3 + Vite + TypeScript + Tailwind CSS 4
 └─ .docs/
    ├─ REQUIREMENT.md   # Original exercise statement

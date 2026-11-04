@@ -1,0 +1,145 @@
+### Manual API checks. Open in VS Code with the REST Client extension and click "Send Request".
+### Start the API first: dotnet run --project src/Atm.Api   (http://localhost:5080)
+### Account ids are read from the first request's response, so nothing needs pasting.
+### Accounts are listed by name: $[0] is Checking, $[1] is Savings.
+
+@baseUrl = http://localhost:5080
+@unknownId = 00000000-0000-0000-0000-000000000000
+
+### 200: list both accounts
+# @name listAccounts
+GET {{baseUrl}}/api/accounts
+
+### 200: one account
+GET {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}
+
+### 404: unknown account
+GET {{baseUrl}}/api/accounts/{{unknownId}}
+
+### 200: newest-first history, first page
+GET {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/transactions?page=1&pageSize=20
+
+### 400: page size out of range
+GET {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/transactions?page=1&pageSize=0
+
+### 200: deposit 100
+POST {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/deposits
+Content-Type: application/json
+
+{
+  "amount": 100,
+  "description": "Cash deposit"
+}
+
+### 400: deposit of zero (fails the request range check)
+POST {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/deposits
+Content-Type: application/json
+
+{
+  "amount": 0
+}
+
+### 400: negative amount
+POST {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/deposits
+Content-Type: application/json
+
+{
+  "amount": -5
+}
+
+### 400: missing amount
+POST {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/deposits
+Content-Type: application/json
+
+{
+  "description": "no amount"
+}
+
+### 400: malformed JSON
+POST {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/deposits
+Content-Type: application/json
+
+{ "amount":
+
+### 422: amount with 3 decimal places (domain rule)
+POST {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/deposits
+Content-Type: application/json
+
+{
+  "amount": 10.001
+}
+
+### 404: deposit to unknown account
+POST {{baseUrl}}/api/accounts/{{unknownId}}/deposits
+Content-Type: application/json
+
+{
+  "amount": 10
+}
+
+### 200: withdraw 50
+POST {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[0].id}}/withdrawals
+Content-Type: application/json
+
+{
+  "amount": 50,
+  "description": "ATM cash"
+}
+
+### 422: withdraw more than the balance (no overdraft), balance unchanged
+POST {{baseUrl}}/api/accounts/{{listAccounts.response.body.$[1].id}}/withdrawals
+Content-Type: application/json
+
+{
+  "amount": 999999
+}
+
+### 200: transfer 100 from Checking to Savings
+POST {{baseUrl}}/api/transfers
+Content-Type: application/json
+
+{
+  "fromAccountId": "{{listAccounts.response.body.$[0].id}}",
+  "toAccountId": "{{listAccounts.response.body.$[1].id}}",
+  "amount": 100,
+  "description": "Savings top-up"
+}
+
+### 422: transfer to the same account
+POST {{baseUrl}}/api/transfers
+Content-Type: application/json
+
+{
+  "fromAccountId": "{{listAccounts.response.body.$[0].id}}",
+  "toAccountId": "{{listAccounts.response.body.$[0].id}}",
+  "amount": 10
+}
+
+### 400: transfer missing the destination
+POST {{baseUrl}}/api/transfers
+Content-Type: application/json
+
+{
+  "fromAccountId": "{{listAccounts.response.body.$[0].id}}",
+  "amount": 10
+}
+
+### 404: transfer from an unknown account
+POST {{baseUrl}}/api/transfers
+Content-Type: application/json
+
+{
+  "fromAccountId": "{{unknownId}}",
+  "toAccountId": "{{listAccounts.response.body.$[1].id}}",
+  "amount": 10
+}
+
+### 500: unexpected server error
+POST {{baseUrl}}/api/transfers
+Content-Type: application/json
+
+{
+  "fromAccountId": "{{unknownId}}",
+  "toAccountId": "{{listAccounts.response.body.$[1].id}}",
+  "amount": 10
+}

@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Phase 2 (application + persistence) implemented and verified; awaiting Gate 3 review. Phase 1 approved at Gate 2.
+**Current status:** Gates 3 and 4 approved; Phase 3 (API) complete. Phase 4a not started.
 
 ---
 
@@ -108,47 +108,47 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - [x] T2.12 `[C]` Build and tests green, then present the gate packet
 
 ### Gate 3: Persistence (10 min)
-- [ ] G3.1 `[H]` I can explain how the transfer is atomic (single `SaveChangesAsync`)
-- [ ] G3.2 `[H]` I can explain why money is stored as cents and how the converter works
-- [ ] G3.3 `[H]` I can explain how `Version` detects a concurrent update
-- [ ] G3.4 `[H]` Review checklist done (PLAN.md §3)
-- [ ] G3.5 `[H]` HITL log updated, then commit: `feat: application services and SQLite persistence`
+- [x] G3.1 `[H]` I can explain how the transfer is atomic (single `SaveChangesAsync`)
+- [x] G3.2 `[H]` I can explain why money is stored as cents and how the converter works
+- [x] G3.3 `[H]` I can explain how `Version` detects a concurrent update
+- [x] G3.4 `[H]` Review checklist done (PLAN.md §3)
+- [x] G3.5 `[H]` HITL log updated, then commit: `feat: application services and SQLite persistence`
 
 ---
 
 ## Phase 3: API (30 min)
 
-- [ ] T3.1 `[C]` Request records with DataAnnotations: `AmountRequest` and `TransferRequest`
-- [ ] T3.2 `[C]` `AccountsController`:
+- [x] T3.1 `[C]` Request records with DataAnnotations: `AmountRequest` and `TransferRequest`
+- [x] T3.2 `[C]` `AccountsController`:
   - `GET` list
   - `GET` by id
   - `GET` transactions
   - `POST` deposits
   - `POST` withdrawals
-- [ ] T3.3 `[C]` `TransfersController`: `POST /api/transfers`
-- [ ] T3.4 `[C]` `GlobalExceptionHandler`: maps exceptions to `ProblemDetails`, as 404 / 422 / 500
-- [ ] T3.5 `[C]` `DbUpdateConcurrencyException` → 409
-- [ ] T3.6 `[C]` `Program.cs` wiring:
+- [x] T3.3 `[C]` `TransfersController`: `POST /api/transfers`
+- [x] T3.4 `[C]` `GlobalExceptionHandler`: maps exceptions to `ProblemDetails`, as 404 / 422 / 500
+- [x] T3.5 `[C]` `DbUpdateConcurrencyException` → 409
+- [x] T3.6 `[C]` `Program.cs` wiring:
   - OpenAPI
   - CORS for `http://localhost:5173`
   - port 5080
   - DB initialization at startup
-- [ ] T3.7 `[C]` `Atm.Api.http` with one request per endpoint and per error case
-- [ ] T3.8 `[C]` Test factory: `WebApplicationFactory` with an in-memory SQLite connection per test
-- [ ] T3.9 `[C]` Integration tests:
-  - [ ] list accounts → 200, 2 accounts
-  - [ ] deposit → 200, balance updated
-  - [ ] withdraw more than the balance → 422, balance unchanged
-  - [ ] transfer → both balances updated, 2 entries sharing a `TransferId`
-  - [ ] unknown account → 404
-  - [ ] invalid body (missing or negative amount) → 400
-- [ ] T3.10 `[C]` Build and tests green, then present the gate packet
+- [x] T3.7 `[C]` `Atm.Api.http` with one request per endpoint and per error case
+- [x] T3.8 `[C]` Test factory: `WebApplicationFactory` with an in-memory SQLite connection per test
+- [x] T3.9 `[C]` Integration tests:
+  - [x] list accounts → 200, 2 accounts
+  - [x] deposit → 200, balance updated
+  - [x] withdraw more than the balance → 422, balance unchanged
+  - [x] transfer → both balances updated, 2 entries sharing a `TransferId`
+  - [x] unknown account → 404
+  - [x] invalid body (missing or negative amount) → 400
+- [x] T3.10 `[C]` Build and tests green, then present the gate packet
 
 ### Gate 4: API contract (10 min)
-- [ ] G4.1 `[H]` Ran every request in `Atm.Api.http`; status codes and bodies match PLAN.md §4
-- [ ] G4.2 `[H]` An unexpected exception returns a generic 500 with no stack trace
-- [ ] G4.3 `[H]` Review checklist done (PLAN.md §3)
-- [ ] G4.4 `[H]` HITL log updated, then commit: `feat(api): endpoints, validation and error contract`
+- [x] G4.1 `[H]` Ran every request in `Atm.Api.http`; status codes and bodies match PLAN.md §4
+- [x] G4.2 `[H]` An unexpected exception returns a generic 500 with no stack trace
+- [x] G4.3 `[H]` Review checklist done (PLAN.md §3)
+- [x] G4.4 `[H]` HITL log updated, then commit: `feat(api): endpoints, validation and error contract`
 
 ---
 
