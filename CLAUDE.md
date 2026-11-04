@@ -50,7 +50,8 @@ atm-app/
       ├─ api/                 # Typed HTTP client (only place that calls fetch)
       ├─ composables/         # State + actions (useAccounts)
       ├─ components/          # Presentational components
-      └─ types/               # TS types mirroring API DTOs
+      ├─ types/               # TS types mirroring API DTOs
+      └─ utils/               # Amount validation and Intl formatting
 ```
 
 ## Commands
@@ -79,7 +80,7 @@ npm run test                                 # Vitest unit + component tests
   Controllers stay thin: validate the request shape, call the service, map to a response.
 - **Transfers are atomic:** both account mutations and both ledger entries are persisted in a
   single `SaveChangesAsync` call (one DB transaction). Transfer legs share a `TransferId`.
-- **Money:** `decimal` in C#, amounts rounded/validated to 2 decimals. Stored as integer cents
+- **Money:** `decimal` in C#, amounts with more than 2 decimals are rejected, not rounded (decisions #19, #28). Stored as integer cents
   in SQLite through an EF value converter, because SQLite has no native decimal type.
   Frontend sends and receives numbers but formats with `Intl.NumberFormat`.
 - **Concurrency:** `Account` has a `Version` concurrency token. A concurrent update returns

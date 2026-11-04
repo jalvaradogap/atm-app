@@ -9,7 +9,7 @@ This file is the **single progress tracker** for [PLAN.md](PLAN.md). The plan ex
 - **Gate** sections are always `[H]`. Claude never ticks them, and never starts the next phase
   until the gate is ticked and I say `approved`.
 
-**Current status:** Done. All phases and gates are complete (Gates 3 to 7 approved by the human).
+**Current status:** Done. All phases and gates are complete. Every gate (0 to 7) was approved by the human.
 
 ---
 
@@ -221,7 +221,7 @@ Acceptance criteria for this phase: [UX.md](UX.md).
   - how to run
   - architecture
   - tradeoffs
-  - what I'd do with more time
+  - project structure
 - [x] T5.2 `[H]` Write the README's "How AI was used" section from the HITL log
 - [x] T5.3 `[C]` Remove unused code, then run `dotnet test`, `npm run test`, and `npm run build` one last time
 - [x] T5.4 `[C]` Present the gate packet

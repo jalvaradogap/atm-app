@@ -154,7 +154,7 @@ to discuss the code.
 - Changes recorded in the HITL log, then I commit
 
 ### Phase 0: Scaffold (15 min)
-- `backend/`: create the `Atm.slnx` solution, the 4 src projects, the 2 test projects, and the project references
+- `backend/`: create the `Atm.slnx` solution, the 4 src projects, the 2 test projects (a third, `Atm.Infrastructure.Tests`, was added in Phase 2; see #29), and the project references
 - Enable nullable, `TreatWarningsAsErrors`, and shared settings in `Directory.Build.props`
 - `frontend/`: `npm create vite@latest frontend -- --template vue-ts`
 - Add a `.gitignore` covering `bin/`, `obj/`, `node_modules/`, `*.db`, and `dist/`
@@ -179,7 +179,7 @@ to discuss the code.
 - I deliberately break one rule (e.g., remove the overdraft check) and confirm a test fails
 
 ### Phase 2: Application + Infrastructure (30 min)
-- `IAccountRepository` (get by id with/without transactions, list, paged transactions, `SaveChangesAsync`)
+- `IAccountRepository` (get by id, list, paged transactions, `SaveChangesAsync`; the ledger is never loaded with the account, see #25)
 - `AccountService` with:
   - `GetAccounts`
   - `GetAccount`
@@ -268,7 +268,7 @@ Implements [UX.md](UX.md). The spec is the acceptance criteria for this phase.
   - how to run
   - architecture overview
   - tradeoffs (from the decision log)
-  - what I'd do with more time
+  - project structure
 - **I write** the "How AI was used" section from the HITL log
 - Final self-review: unused code removed, all tests pass
 
@@ -355,7 +355,9 @@ README's "How AI was used" section.
 | 0 | Plain CSS, with Tailwind wrongly grouped with component libraries | Chose Tailwind 4 (decision #16) | Faster on a non-scored area, while the markup stays explicit and explainable |
 | 0 | 16 decisions (#1–16), all *Proposed* | Reviewed and accepted all of them | Agreed with the reasoning and tradeoffs as written |
 | 1 | Phase 0 scaffold: backend solution and projects, `Directory.Build.props`, frontend from `create-vite` 9.3.3 with Tailwind 4, root `.gitignore`. New decisions #17 and #18 as *Proposed* | Ran `dotnet` and `npm` commands myself with no issues. Judged the implementation clean. Renamed `docs/` to `.docs/` and asked for all references to be updated | Wanted the docs folder listed first |
+| 2 | Mini-gate 1a: the domain test case list. Then Phase 1: `Account`, `Transaction`, amount rules and domain exceptions. Decisions #19–#23 as *Proposed* | Approved the test list as proposed. Removed the overdraft check, saw a test fail, and reverted it. Approved Gate 2 | The tests describe the behavior I expect, and breaking a rule showed that they actually guard it |
 | 3 | Phase 2 application services and SQLite persistence. Decisions #24–#31 as *Proposed* | Ran the build and tests myself and they passed. Approved Gate 3 | Verified the work before approving it |
 | 4 | Phase 3 API: endpoints, validation, ProblemDetails handler, `Atm.Api.http`. Decisions #32–#37 as *Proposed* | Agreed with decisions #32–#37 (marked Accepted). Ran every request in `Atm.Api.http` and got the expected results. Approved Gate 4 (G4.1 to G4.4) | Each decision reviewed and agreed with the reasoning as written. Checked the API contract by running it myself |
 | 5 | G4.2 could not be checked by hand, since no request triggers an unexpected error. Option offered: add an automated test, or leave G4.2 unverified and note it in the README | Chose the automated test. It forces an unexpected exception and checks the generic 500 response | I wanted evidence for the error contract, not an open item |
-| 7 | Final review against the last-minute checklist: build, tests and run verified, but docs had drifted. S.1 and S.2 were still listed as pending, the status lines were stale, decisions #17–#31 were still *Proposed*, and the README had no project structure section | Asked for the done items to be removed from "What I'd do with more time" and for the status lines to be updated. Had Claude check #17–#31 against the code (all implemented) and then marked them Accepted. Asked for a project structure section in the README | The docs must match what the app actually does, and every decision should show as reviewed |
+| 6 | Phase 4b UI: account cards, operation panel with swap, history, status messages and server banner, plus the `OperationPanel` component test. Decisions #41–#45 as *Proposed*, including #45 (dark mode cut) | Did every operation and every error path in the browser, a keyboard-only pass, and a 375 px phone-width check. All passed. Accepted #41–#45 and approved Gate 6 as built | Checked the UI against UX.md myself before approving it |
+| 7 | Final review against the last-minute checklist: build, tests and run verified, but docs had drifted. S.1 and S.2 were still listed as pending, the status lines were stale, decisions #17–#31 were still *Proposed*, and the README had no project structure section | Asked for the status lines to be updated. Had Claude check #17–#31 against the code (all implemented) and then marked them Accepted. Asked for a project structure section in the README. Then removed the README's "What I'd do with more time" section and its dark-mode note, since those items are beyond the requirements (the status now says nothing required is pending; out-of-scope items stay in PLAN §1 and UX §6). Finally asked for a consistency pass across all docs and fixed what it found | The docs must match what the app actually does and agree with each other, and every decision should show as reviewed |

@@ -53,12 +53,12 @@ form, then the history.
 | **Selecting an account** | Click a card. The selected card gets an accent border plus a "Selected" label, so color isn't the only cue. The form and history follow the selection. |
 | **Choosing an operation** | Three tabs: Deposit, Withdraw, Transfer. Switching tabs keeps the typed amount. |
 | **Transfer direction** | There are exactly two accounts, so there's **no destination dropdown**. The form shows `From Checking → To Savings` with a **⇄ swap** button, which makes a same-account transfer impossible by design. |
-| **Amount input** | `<input inputmode="decimal">` with a `$` prefix and a label. It's validated as you type with `validateAmount`, and the reason shows below the field ("Maximum 2 decimal places", "Exceeds available balance $1,200.00"). |
+| **Amount input** | `<input inputmode="decimal">` with a `$` prefix and a label. It's validated as you type with `validateAmount`, and the reason shows below the field ("Use at most 2 decimal places.", "Exceeds available balance $1,200.00"). |
 | **Context** | "Available: $X" shows under the field for Withdraw and Transfer. |
 | **Submit button** | The label repeats the action and amount (`Withdraw $50.00`). It's disabled while the amount is invalid. `Enter` submits, because it's a real `<form>`. |
 | **While processing** | The button says "Processing…" and the inputs are disabled, which prevents double submits. |
 | **Success** | A green message with the new balance(s), for example "Transferred $50.00. Checking: $1,150.00 · Savings: $5,050.00". The amount is cleared, and the new history entry is briefly highlighted. |
-| **Business error (422)** | A red message under the form, using the backend's `detail` (e.g., "Insufficient funds: available $1,200.00"). The input keeps its value so the user can fix it. |
+| **Business error (422)** | A red message under the form, using the backend's `detail` (e.g., "Insufficient funds: balance is 1200.00, requested 1500.00."). The input keeps its value so the user can fix it. |
 | **Server unreachable / 500** | A banner at the top: "Can't reach the bank right now", with a **Retry** button. No stack traces or raw JSON. |
 | **Initial loading** | Card and history placeholders ("Loading…"), so the layout doesn't jump. |
 | **Empty history** | "No transactions yet. Make a deposit to get started." |
