@@ -4,7 +4,7 @@ A web-based ATM application for a single user who manages two bank accounts (Che
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
 > **Status:** Complete, pending final review and sign-off (Phase 5). The app runs end to end:
-> 61 backend tests and 23 frontend tests pass. Dark mode is not included (cut line).
+> 62 backend tests and 23 frontend tests pass. Dark mode is not included (cut line).
 > See [.docs/TASKS.md](.docs/TASKS.md) for live progress.
 
 ## Features

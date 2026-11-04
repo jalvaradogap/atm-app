@@ -33,6 +33,7 @@ defineProps<{
       >
         <div class="min-w-0">
           <p class="font-medium">{{ transactionLabel(transaction, accounts) }}</p>
+          <p v-if="transaction.description" class="text-sm text-ink">{{ transaction.description }}</p>
           <p class="text-sm text-muted">{{ formatDateTime(transaction.occurredAt) }}</p>
         </div>
         <div class="shrink-0 text-right tabular-nums">
