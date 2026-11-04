@@ -12,7 +12,7 @@ A web ATM for a single, unauthenticated user with **two accounts** (Checking and
 - Show transaction history per account (newest first, paginated)
 - Clear error messages for invalid operations
 
-**Explicitly out of scope** (mentioned in the README as possible next steps)
+**Explicitly out of scope**
 - Authentication, multiple users, card/PIN flow
 - Daily withdrawal limits, cash denominations, fees, currencies
 - Idempotency keys for retried requests

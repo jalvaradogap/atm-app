@@ -235,7 +235,7 @@ Acceptance criteria for this phase: [UX.md](UX.md).
 
 ## Stretch (only if time remains; first to be cut)
 
-Not planned: Playwright E2E tests (see decision #14). Listed in the README as a next step.
+Not planned: Playwright E2E tests (see decision #14).
 
 - [x] S.1 `[C]` A concurrency integration test (two simultaneous withdrawals, one gets 409) *(Done as a deterministic test of the 409 mapping, in `ConcurrencyEndpointTests`, rather than a timed race between two requests.)*
 - [x] S.2 `[C]` Transaction descriptions shown in the UI

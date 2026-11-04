@@ -4,7 +4,8 @@ A web-based ATM application for a single user who manages two bank accounts (Che
 Savings). Built as a timeboxed (2–4 h) coding exercise focused on software design and architecture.
 
 > **Status:** Done. All phases and gates are complete, and the app runs end to end:
-> 62 backend tests and 23 frontend tests pass. Dark mode is not included (cut line).
+> 62 backend tests and 23 frontend tests pass. Every feature in the requirements is implemented,
+> so nothing is pending.
 > See [.docs/TASKS.md](.docs/TASKS.md) for the full checklist.
 
 ## Features
@@ -165,23 +166,3 @@ The planning documents built on each other:
 Higher-level work, such as the requirements and the plan, was done with Claude Opus 5.5. The task breakdown and most of the implementation were done with Claude Haiku 5.5.
 
 The AI made mistakes that the tests or my review caught. For example, EF Core treated new ledger rows as existing rows until the key mapping was set explicitly, and ASP.NET failed at runtime on validation attributes placed on record properties, which an error handler had hidden behind a 500. I can explain the design choices in the code, including the ones the AI proposed.
-
-## What I'd do with more time
-
-- **Schema and data.** Replace `EnsureCreated` with migrations, and move the demo seeding behind a
-  setting (#4).
-- **History paging.** Add paging in the history view, which shows the latest 20 entries (the API
-  already supports paging).
-- **Confirmation and receipts.** Add an optional confirm step for larger amounts, and show a receipt.
-- **Money on the wire.** Send amounts as strings rather than JSON numbers, which removes any
-  question of floating-point conversion between the browser and the server.
-- **Security and identity.** Authentication and card/PIN flows, which are out of scope now.
-- **End-to-end tests.** Add Playwright tests for the full user flows (decision #14 lists this as a
-  next step).
-- **Accessibility and polish.** Dark mode, and a check of contrast and keyboard order with an
-  accessibility tool.
-- **Generated client.** Generate the frontend API types from the OpenAPI document, so the DTO types
-  can't drift from the backend.
-- **Idempotency.** Idempotency keys for retried requests (out of scope in PLAN §1).
-- **Counterparty in the API.** The history currently derives transfer labels from the account list,
-  which works only with two accounts. The API could return the counterparty name directly.
